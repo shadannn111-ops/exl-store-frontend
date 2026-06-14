@@ -18,6 +18,10 @@
             border: 1px solid #e8ecef;
             transition: all 0.2s ease;
         }
+        .qty-selector.disabled {
+            opacity: 0.6;
+            background: #e9ecef;
+        }
         .qty-selector:hover {
             border-color: #2874f0;
             box-shadow: 0 2px 8px rgba(40,116,240,0.1);
@@ -38,7 +42,13 @@
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .qty-btn:hover {
+        .qty-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e9ecef;
+            color: #adb5bd;
+        }
+        .qty-btn:hover:not(:disabled) {
             background: #2874f0;
             color: white;
             transform: scale(1.05);
@@ -650,6 +660,12 @@
                 
                 let card = document.createElement('div');
                 card.className = 'product-card';
+                
+                // Agar product cart mein hai toh quantity selector disable karo
+                let qtySelectorClass = isInCart ? 'qty-selector disabled' : 'qty-selector';
+                let qtyBtnDisabled = isInCart ? 'disabled' : '';
+                let qtyValue = isInCart ? (cart.find(item => item.id === p.id)?.quantity || currentQty) : currentQty;
+                
                 card.innerHTML = `
                     <div class="product-badge">${discount}% OFF</div>
                     <img src="${p.image}" class="product-image" loading="lazy">
@@ -660,10 +676,10 @@
                             <span class="original-price">₹${formattedOriginal}</span>
                             <span class="discount">${discount}%</span>
                         </div>
-                        <div class="qty-selector">
-                            <button class="qty-btn" onclick="event.stopPropagation(); changeQuantity(${p.id}, -1)">−</button>
-                            <span class="qty-value" id="qty-${p.id}">${currentQty}</span>
-                            <button class="qty-btn" onclick="event.stopPropagation(); changeQuantity(${p.id}, 1)">+</button>
+                        <div class="${qtySelectorClass}">
+                            <button class="qty-btn" ${qtyBtnDisabled} onclick="event.stopPropagation(); changeQuantity(${p.id}, -1)">−</button>
+                            <span class="qty-value" id="qty-${p.id}">${qtyValue}</span>
+                            <button class="qty-btn" ${qtyBtnDisabled} onclick="event.stopPropagation(); changeQuantity(${p.id}, 1)">+</button>
                         </div>
                         <button class="add-to-cart ${isInCart ? 'added' : ''}" onclick="addToCartWithQuantity(${p.id}, this)" ${isInCart ? 'disabled' : ''}>
                             ${isInCart ? '✓ Added to Cart' : '🛒 Add to Cart'}
@@ -675,6 +691,10 @@
         }
 
         function changeQuantity(productId, delta) {
+            // Agar product already cart mein hai toh quantity change nahi kar sakte
+            if (cart.some(item => item.id === productId)) {
+                return;
+            }
             let currentQty = getTempQuantity(productId);
             let newQty = currentQty + delta;
             if (newQty < 1) newQty = 1;
@@ -704,6 +724,9 @@
             button.classList.add('added');
             button.disabled = true;
             button.innerHTML = '✓ Added to Cart';
+            
+            // Quantity selector ko bhi disable karne ke liye product re-render karo
+            displayProducts();
             
             // Cart count update karo
             updateHeader();
