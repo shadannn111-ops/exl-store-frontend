@@ -79,7 +79,8 @@
         }
         .add-to-cart.added {
             background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-            cursor: default;
+            cursor: not-allowed;
+            opacity: 0.8;
         }
         .add-to-cart.added:hover {
             transform: none;
@@ -510,19 +511,19 @@
 
         // ========== 60+ UNIQUE INDIAN NAMES ==========
         const indianNames = [
-            'Rahul ', 'Priya', 'Amit ', 'Neha', 'Vikram ', 
-            'Anjali', 'Rohan ', 'Sneha', 'Kunal ', 'Divya',
-            'Manish ', 'Kavya ', 'Rajesh ', 'Simran', 'Arjun ',
-            'Pooja ', 'Siddharth ', 'Meera ', 'Ankit ', 'garwal',
-            'Varun', 'Shreya ', 'Tarun ', 'Nikita ', 'Gaurav ',
-            'Isha ', 'Abhishek ', 'Riya ', 'Saurabh ', 'Tanya',
-            'Harsh ', 'Swati', 'Karan ', 'Preeti ', 'Mohit ',
-            'Nidhi', 'Rishabh', 'Shivani ', 'Yash ', 'Sakshi',
-            'Aditya', 'Shruti', 'Dhruv ', 'Anushka ', 'Kartik',
-            'Sanya ', 'Vishal', 'Rashmi ', 'Nikhil ', 'Karishma',
-            'Pankaj ', 'Raveena ', 'Ayushmann ', 'Kriti Sanon', 'Vicky ',
-            'Taapser', 'Rajkummar ', 'Bhumi', 'khansahab', 'Alia',
-            'Ranveer ', 'Deepika ', 'Shahid Kapoor', 'Karan', 'Sidharth'
+            'Rahul', 'Priya', 'Amit', 'Neha', 'Vikram', 
+            'Anjali', 'Rohan', 'Sneha', 'Kunal', 'Divya',
+            'Manish', 'Kavya', 'Rajesh', 'Simran', 'Arjun',
+            'Pooja', 'Siddharth', 'Meera', 'Ankit', 'Agarwal',
+            'Varun', 'Shreya', 'Tarun', 'Nikita', 'Gaurav',
+            'Isha', 'Abhishek', 'Riya', 'Saurabh', 'Tanya',
+            'Harsh', 'Swati', 'Karan', 'Preeti', 'Mohit',
+            'Nidhi', 'Rishabh', 'Shivani', 'Yash', 'Sakshi',
+            'Aditya', 'Shruti', 'Dhruv', 'Anushka', 'Kartik',
+            'Sanya', 'Vishal', 'Rashmi', 'Nikhil', 'Karishma',
+            'Pankaj', 'Raveena', 'Ayushmann', 'Kriti', 'Vicky',
+            'Taapsee', 'Rajkummar', 'Bhumi', 'Nawaz', 'Alia',
+            'Ranveer', 'Deepika', 'Shahid', 'Kiara', 'Sidharth'
         ];
 
         // 25+ Indian Cities
@@ -643,7 +644,7 @@
                 let isInCart = cart.some(item => item.id === p.id);
                 let currentQty = getTempQuantity(p.id);
                 
-                // FORMAT PRICES WITH COMMAS - FIXED HERE
+                // FORMAT PRICES WITH COMMAS
                 let formattedPrice = formatIndianPrice(p.price);
                 let formattedOriginal = formatIndianPrice(p.original);
                 
@@ -682,20 +683,30 @@
             if (qtySpan) qtySpan.innerText = newQty;
         }
 
+        // ========== FIXED: ADD TO CART FUNCTION - BUTTON WILL LOCK PROPERLY ==========
         function addToCartWithQuantity(productId, button) {
             let product = allProducts.find(p => p.id === productId);
-            if (cart.some(item => item.id === productId)) return;
+            
+            // Double check: agar already cart mein hai toh return
+            if (cart.some(item => item.id === productId)) {
+                // Agar already hai toh button disable karo
+                button.classList.add('added');
+                button.disabled = true;
+                button.innerHTML = '✓ Added to Cart';
+                return;
+            }
             
             let quantityToAdd = getTempQuantity(productId);
             cart.push({ ...product, quantity: quantityToAdd });
             localStorage.setItem('cart', JSON.stringify(cart));
             
+            // Button ko lock karo
             button.classList.add('added');
             button.disabled = true;
             button.innerHTML = '✓ Added to Cart';
-            updateHeader();
             
-            // NO NOTIFICATION ON ADD TO CART - REMOVED
+            // Cart count update karo
+            updateHeader();
         }
 
         function filterCategory(category, element) {
