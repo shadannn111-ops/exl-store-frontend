@@ -49,6 +49,7 @@ header {
     display: flex;
     gap: 25px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -769,19 +770,20 @@ header {
 }
 
 /* ========== RESPONSIVE ========== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .payment-wrapper {
         flex-direction: column;
     }
     
-    .upi-apps,
-    .banks-grid,
-    .wallet-options {
-        grid-template-columns: repeat(2, 1fr);
+    .order-summary {
+        position: static;
+        margin-top: 20px;
     }
-    
-    .card-type-selector {
-        grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
     }
     
     .payment-methods,
@@ -791,29 +793,121 @@ header {
     
     .page-title {
         font-size: 28px;
+        margin: 20px 0 15px;
+    }
+    
+    .section-title {
+        font-size: 20px;
     }
     
     .option-header {
-        padding: 15px 18px;
+        padding: 12px 15px;
     }
     
     .option-header label {
-        font-size: 15px;
+        font-size: 14px;
+    }
+    
+    .option-icon {
+        font-size: 24px;
+    }
+    
+    .payment-details {
+        padding: 15px;
+    }
+    
+    .card-type-selector {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .card-type-btn {
+        padding: 10px;
+    }
+    
+    .card-type-icon {
+        font-size: 28px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .upi-apps,
+    .banks-grid,
+    .wallet-options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .saved-address-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .order-item {
+        font-size: 12px;
+    }
+    
+    .summary-item {
+        font-size: 14px;
+    }
+    
+    .summary-total {
+        font-size: 18px;
+    }
+    
+    .pay-now-btn {
+        padding: 14px;
+        font-size: 16px;
+    }
+    
+    .qr-container {
+        padding: 15px;
+    }
+    
+    .qr-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .qr-code-placeholder {
+        font-size: 50px;
+    }
+    
+    .nav-links {
+        justify-content: center;
+    }
+    
+    .nav-links a {
+        font-size: 12px;
     }
 }
 
 @media (max-width: 480px) {
+    .card-type-selector,
     .upi-apps,
     .banks-grid,
     .wallet-options {
         grid-template-columns: 1fr;
     }
     
-    .card-type-selector {
-        grid-template-columns: 1fr;
+    .option-header {
+        padding: 10px 12px;
     }
     
-    .form-row {
-        flex-direction: column;
+    .option-header label {
+        font-size: 13px;
+    }
+    
+    .summary-total {
+        font-size: 16px;
+    }
+    
+    .page-title {
+        font-size: 22px;
     }
 }
